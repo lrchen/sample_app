@@ -60,7 +60,7 @@ describe User do
     end
     
     it "should require a matching password confirmation" do
-      User.new(@attr.merge(:password_confimation => "invalid")).should_not be_valid
+      User.new(@attr.merge(:password_confirmation => "invalid")).should_not be_valid
     end
     
     it "should reject short passwords" do
@@ -113,6 +113,7 @@ describe User do
         matching_user = User.authenticate(@attr[:email], @attr[:password])
         matching_user.should == @user
       end
+    end
   end
   
   
