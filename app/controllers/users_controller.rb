@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate, :only => [:edit, :update]
   before_filter :correct_user, :only => [:edit, :update]
+  before_filter :has_login, :only => [:new, :create]
   before_filter :admin_user,   :only => :destroy
   
   def index
@@ -10,6 +11,8 @@ class UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(:page => params[:page])
+    @title = CGI.escapeHTML(@user.name)
   end
   
   def new
@@ -51,9 +54,9 @@ class UsersController < ApplicationController
   end
   
   private
-
-    def authenticate
-      deny_access unless signed_in?
+    
+    def has_login
+      redirect_to current_user if signed_in?
     end
     
     def correct_user
@@ -62,6 +65,8 @@ class UsersController < ApplicationController
     end
     
     def admin_user
+      @user = User.find(params[:id])
       redirect_to(root_path) unless current_user.admin?
+      redirect_to(root_path) if current_user?(@user)
     end
 end
