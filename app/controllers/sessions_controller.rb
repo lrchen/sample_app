@@ -16,8 +16,9 @@ class SessionsController < ApplicationController
       redirect_back_or user
     end
   end
-  
+
   def destroy
-    render 'new'
+    sign_out
+    redirect_to root_path
   end
 end
